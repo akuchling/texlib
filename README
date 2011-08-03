@@ -1,0 +1,71 @@
+
+tex_wrap v1.00
+==============
+
+This is an implementation of the dynamic programming algorithm,
+originally qdeveloped by D.E. Knuth and M.F. Plass, used by TeX to
+break a paragraph into lines.  I won't describe the algorithm in
+detail here; for a full explanation, see the chapter describing it in
+Knuth's book _Digital Typography_, which explains the theory and shows
+how to use it to achieve various clever effects.
+
+The interface is fairly simple.  Create an ObjectList instance and
+fill it with a series of Box, Glue, and Penalty objects representing a
+single paragraph.  When you've done that, call the ObjectList's
+.add_closing_penalty() method to add the standard glue and penalty for
+a paragraph end.  Then call its .compute_breakpoints() method which
+does all the work and returns a list of integers, which are the
+indexes at which the text should be broken.
+
+The signature of this method is:
+    def compute_breakpoints(self,
+                            line_lengths,
+                            looseness = 0,  
+                            tolerance = 1,
+                            fitness_demerit = 100, 
+                            flagged_demerit = 100, 
+                            ):
+
+line_lengths is the only required parameter, and is a list of integers
+giving the lengths of each line.  The last element of the list is
+reused for subsequent lines.  So you can pass [100] for a paragraph
+that's 100 units wide, or range(140, 20, -10) for a triangular
+paragraph.  There's no particular unit for width, so you can work in
+points or pixels or whatever you like.
+
+The rest of the parameters are optional.  looseness is an integer
+value. If it's positive, the paragraph will be set to take that many
+lines more than the optimum value, so you can make a paragraph take up
+an extra line.  If it's negative, the paragraph is set that many lines
+tighter, if possible; usually you'll only manage to set it a single
+line tighter.  qlooseness defaults to zero, meaning the optimal length
+for the paragraph.
+
+tolerance is the maximum adjustment ratio allowed for a line.  It
+defaults to 1, meaning that all the glue on the line is stretched up
+to its specified stretch value.
+
+fitness_demerit is additional value added to the demerit score when
+two consecutive lines are in different fitness classes.  There are
+four classes: very tight, tight, loose, and very loose.  The algorithm
+tries to avoid having a very tight line next to a very loose line,
+because the difference is visible and distracting.
+
+flagged_demerit is an additional value added to the demerit score when
+breaking at the second of two flagged qpenalties.
+
+Once you've got the list of optimal breakpoints, formatting and
+outputting the text is up to you; I haven't implemented an API for
+this because I have no idea what such an API would look like.  Box
+instances have a 'character' attribute that you can specify, so you
+can set this to the character for a given box for later use by an
+output pass.  (It needn't be a character; you could set it to an
+arbitrary object if you like, though then the name is rather
+misleading.)
+
+Bug reports, sample code, and notes about the module's usage are
+welcome; please send them to <akuchlin@mems-exchange.org>.
+
+-- 
+A.M. Kuchling 			http://www.amk.ca
+

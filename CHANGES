@@ -1,0 +1,13 @@
+
+tex_Wrap 1.01 : 2001-05-16
+
+        * Patch from Sean 'Shaleh' Perry to make the code 
+	  work with Python 1.5.2 (removing a few uses of +=
+	  and a list comprehension)
+
+	
+tex_wrap 1.00 : 2001-05-16
+
+	* Initial release
+
+	
