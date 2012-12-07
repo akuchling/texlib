@@ -1,9 +1,8 @@
-
 tex_wrap v1.00
 ==============
 
 This is an implementation of the dynamic programming algorithm,
-originally qdeveloped by D.E. Knuth and M.F. Plass, used by TeX to
+originally developed by D.E. Knuth and M.F. Plass, used by TeX to
 break a paragraph into lines.  I won't describe the algorithm in
 detail here; for a full explanation, see the chapter describing it in
 Knuth's book _Digital Typography_, which explains the theory and shows
@@ -64,7 +63,7 @@ arbitrary object if you like, though then the name is rather
 misleading.)
 
 Bug reports, sample code, and notes about the module's usage are
-welcome; please send them to <akuchlin@mems-exchange.org>.
+welcome; please send them to <amk@amk.ca>.
 
 -- 
 A.M. Kuchling 			http://www.amk.ca
