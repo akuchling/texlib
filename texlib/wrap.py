@@ -34,8 +34,6 @@ be.
 Reference:
     "Breaking Paragraphs into Lines", D.E. Knuth and M.F. Plass,
     chapter 3 of _Digital Typography_, CSLI Lecture Notes #78.
-
-Implemented by A.M. Kuchling <akuchlin@mems-exchange.org>
 """
 
 import sys, string
