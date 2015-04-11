@@ -51,7 +51,7 @@ tries to avoid having a very tight line next to a very loose line,
 because the difference is visible and distracting.
 
 flagged_demerit is an additional value added to the demerit score when
-breaking at the second of two flagged qpenalties.
+breaking at the second of two flagged penalties.
 
 Once you've got the list of optimal breakpoints, formatting and
 outputting the text is up to you; I haven't implemented an API for
