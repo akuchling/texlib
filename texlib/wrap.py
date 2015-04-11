@@ -52,18 +52,18 @@ class Box:
     """Class representing a glyph or character.  Boxes have a fixed
     width that doesn't change.
     """
-    
+
     def __init__(self, width, character=None):
         self.character = character
         self.width = width
         self.stretch = self.shrink = 0
         self.penalty = 0
         self.flagged = 0
-        
+
     def is_glue(self):         return 0
     def is_box(self):          return 1
     def is_penalty(self):      return 0
-    def is_forced_break(self): return 0 
+    def is_forced_break(self): return 0
 
 class Glue:
     """Class representing a bit of glue.  Glue has a preferred width,
@@ -71,7 +71,7 @@ class Glue:
     by a certain amount.  Line breaks can be placed at any point where
     glue immediately follows a box.
     """
-    
+
     def __init__(self, width, stretch, shrink):
         self.width, self.stretch, self.shrink = width, stretch, shrink
 
@@ -81,12 +81,12 @@ class Glue:
 
         if r < 0: return self.width + r*self.shrink
         else:     return self.width + r*self.stretch
-        
+
     def is_glue(self):         return 1
     def is_box(self):          return 0
     def is_penalty(self):      return 0
-    def is_forced_break(self): return 0 
-    
+    def is_forced_break(self): return 0
+
 class Penalty:
     """Class representing a penalty.  Negative penalty values
     encourage line breaks at a given point, and positive values
@@ -96,7 +96,7 @@ class Penalty:
     penalty's 'width' attribute is used.
 
     """
-    
+
     def __init__(self, width, penalty, flagged = 0):
         self.width = width
         self.penalty = penalty
@@ -108,11 +108,11 @@ class Penalty:
     def is_penalty(self):      return 1
     def is_forced_break(self):
         return (self.penalty == -INFINITY)
-    
+
 
 class _BreakNode:
     "Internal class representing an active breakpoint."
-    
+
     def __init__(self, position, line, fitness_class,
                  totalwidth, totalstretch, totalshrink,
                  demerits, previous = None):
@@ -124,7 +124,7 @@ class _BreakNode:
 
     def __repr__(self):
         return '<_BreakNode at %i>' % self.position
-    
+
 class ObjectList(UserList.UserList):
 
     """Class representing a list of Box, Glue, and Penalty objects.
@@ -142,7 +142,7 @@ class ObjectList(UserList.UserList):
 
     def is_feasible_breakpoint(self, i):
         "Return true if position 'i' is a feasible breakpoint."
-        
+
         box = self[i]
         if box.is_penalty() and box.penalty < INFINITY:
             return 1
@@ -153,7 +153,7 @@ class ObjectList(UserList.UserList):
 
     def is_forced_break(self, i):
         "Return true if position 'i' is a forced breakpoint."
-        
+
         box = self[i]
         if box.is_penalty() and box.penalty == -INFINITY:
             return 1
@@ -162,17 +162,17 @@ class ObjectList(UserList.UserList):
 
     def measure_width(self, pos1, pos2):
         "Add up the widths between positions 1 and 2"
-        
+
         return self.sum_width[pos2] - self.sum_width[pos1]
-            
+
     def measure_stretch(self, pos1, pos2):
         "Add up the stretch between positions 1 and 2"
-        
+
         return self.sum_stretch[pos2] - self.sum_stretch[pos1]
-            
+
     def measure_shrink(self, pos1, pos2):
         "Add up the shrink between positions 1 and 2"
-        
+
         return self.sum_shrink[pos2] - self.sum_shrink[pos1]
 
     def compute_adjustment_ratio(self, pos1, pos2, line, line_lengths):
@@ -185,7 +185,7 @@ class ObjectList(UserList.UserList):
         # Get the length of the current line; if the line_lengths list
         # is too short, the last value is always used for subsequent
         # lines.
-        
+
         if line < len(line_lengths):
             available_length = line_lengths[line]
         else:
@@ -202,7 +202,7 @@ class ObjectList(UserList.UserList):
                 r = (available_length - length) / float(y)
             else:
                 r = INFINITY
-                
+
         elif length > available_length:
             z = self.measure_shrink(pos1, pos2)
             if self.debug:
@@ -225,29 +225,29 @@ class ObjectList(UserList.UserList):
         sorted by line number, and so that the set of (position, line,
         fitness_class) tuples has no repeated values.
         """
-        
+
         index = 0
 
         # Find the first index at which the active node's line number
         # is equal to or greater than the line for 'node'.  This gives
-        # us the insertion point.  
+        # us the insertion point.
         while (index < len(active_nodes) and
                active_nodes[index].line < node.line):
             index = index + 1
-            
+
         insert_index = index
 
         # Check if there's a node with the same line number and
         # position and fitness.  This lets us ensure that the list of
         # active nodes always has unique (line, position, fitness)
-        # values.        
+        # values.
         while (index < len(active_nodes) and
                active_nodes[index].line == node.line):
             if (active_nodes[index].fitness_class == node.fitness_class and
                 active_nodes[index].position == node.position):
                 # A match, so just return without adding the node
-                return 
-                
+                return
+
             index = index + 1
 
         active_nodes.insert(insert_index, node)
@@ -280,7 +280,7 @@ class ObjectList(UserList.UserList):
                           when breaking at the second of two flagged
                           penalties.
         """
-        
+
         m = len(self)
         if m == 0: return []            # No text, so no breaks
 
@@ -304,7 +304,7 @@ class ObjectList(UserList.UserList):
         # width/stretch/shrink between two indexes; just compute
         # sum_*[pos2] - sum_*[pos1].  Note that sum_*[i] is the total
         # up to but not including the box at position i.
-        
+
         self.sum_width = {} ; self.sum_stretch = {} ; self.sum_shrink = {}
         width_sum = stretch_sum = shrink_sum = 0
         for i in range(m):
@@ -345,7 +345,7 @@ class ObjectList(UserList.UserList):
                      active_nodes.sort(cmp_f)
                      for A in active_nodes: print A.position, A.line, A.fitness_class
                      print ; print
-                 
+
                  # Loop over the list of active nodes, and compute the fitness
                  # of the line formed by breaking at A and B.  The resulting
                  breaks = []                 # List of feasible breaks
@@ -420,7 +420,7 @@ class ObjectList(UserList.UserList):
                          self.add_active_node(active_nodes, brk)
             # end if self.feasible_breakpoint()
         # end for i in range(m)
-        
+
         if self.debug:
             print 'Main loop completed'
             print 'Active nodes=', active_nodes
@@ -429,13 +429,13 @@ class ObjectList(UserList.UserList):
         L = map(lambda A: (A.demerits, A), active_nodes)
         L.sort()
         _, A = L[0]
-            
+
         if looseness != 0:
             # The search for the appropriate active node is a bit more
             # complicated; we look for a node with a paragraph length
             # that's as close as possible to (A.line+looseness), and
             # with the minimum number of demerits.
-            
+
             best = 0
             d = INFINITY
             for br in active_nodes:
@@ -456,7 +456,7 @@ class ObjectList(UserList.UserList):
                     b = br
 
             A = b
-            
+
         # Use the chosen node A to determine the optimum breakpoints,
         # and return the resulting list of breakpoints.
         breaks = []
@@ -495,7 +495,7 @@ if __name__ == '__main__':
         elif ch == '@':
             # Append forced break
             L.append( Penalty(0, -INFINITY) )
-            
+
         else:
             # All characters are 1 unit wide
             b = Box(1, ch)
@@ -506,7 +506,7 @@ if __name__ == '__main__':
 
     # Compute the breakpoints
     line_lengths = [line_width]
-    line_lengths = range(120, 20, -10) 
+    line_lengths = range(120, 20, -10)
     breaks = L.compute_breakpoints( line_lengths,
                                     tolerance = 2)
     print breaks, len(L)
@@ -524,11 +524,11 @@ if __name__ == '__main__':
                     width = int( box.compute_width(r) )
                 else: width = 1
                 sys.stdout.write(' '*width)
-                
+
             elif hasattr(box, 'character'):
                 sys.stdout.write( box.character )
 
         line_start = breakpoint + 1
         sys.stdout.write('\n')
-        
+
     print
