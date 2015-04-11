@@ -19,10 +19,10 @@ indexes at which the text should be broken.
 The signature of this method is:
     def compute_breakpoints(self,
                             line_lengths,
-                            looseness = 0,  
+                            looseness = 0,
                             tolerance = 1,
-                            fitness_demerit = 100, 
-                            flagged_demerit = 100, 
+                            fitness_demerit = 100,
+                            flagged_demerit = 100,
                             ):
 
 line_lengths is the only required parameter, and is a list of integers
@@ -37,7 +37,7 @@ value. If it's positive, the paragraph will be set to take that many
 lines more than the optimum value, so you can make a paragraph take up
 an extra line.  If it's negative, the paragraph is set that many lines
 tighter, if possible; usually you'll only manage to set it a single
-line tighter.  qlooseness defaults to zero, meaning the optimal length
+line tighter.  looseness defaults to zero, meaning the optimal length
 for the paragraph.
 
 tolerance is the maximum adjustment ratio allowed for a line.  It
@@ -65,6 +65,5 @@ misleading.)
 Bug reports, sample code, and notes about the module's usage are
 welcome; please send them to <amk@amk.ca>.
 
--- 
+--
 A.M. Kuchling 			http://www.amk.ca
-
