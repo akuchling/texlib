@@ -38,7 +38,7 @@ Reference:
 
 from __future__ import print_function
 
-import sys, string
+import sys
 
 __version__ = "1.01"
 
@@ -481,7 +481,7 @@ if __name__ == '__main__':
     concatenation of several input strings.  The algorithm is not
     cryptographically strong, and should not be used for
     authentication or digital signatures."""
-    text = string.join( string.split(text) )
+    text = ' '.join(text.split())
 
     line_width = 100                    # Line width to use for formatting
     full_justify = 0                    # Boolean; if true, do full justification
