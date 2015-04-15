@@ -425,9 +425,7 @@ class ObjectList(list):
             print( 'Active nodes=', active_nodes)
 
         # Find the active node with the lowest number of demerits.
-        L = map(lambda A: (A.demerits, A), active_nodes)
-        L.sort()
-        _, A = L[0]
+        A = min(active_nodes, key=lambda A: A.demerits)
 
         if looseness != 0:
             # The search for the appropriate active node is a bit more
