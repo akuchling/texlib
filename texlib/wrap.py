@@ -39,7 +39,6 @@ Reference:
 from __future__ import print_function
 
 import sys, string
-import UserList
 
 __version__ = "1.01"
 
@@ -125,7 +124,7 @@ class _BreakNode:
     def __repr__(self):
         return '<_BreakNode at %i>' % self.position
 
-class ObjectList(UserList.UserList):
+class ObjectList(list):
 
     """Class representing a list of Box, Glue, and Penalty objects.
     Supports the same methods as regular Python lists.
