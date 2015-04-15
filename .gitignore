@@ -1,0 +1,8 @@
+*.pyc
+*~
+__pycache__
+bin
+build
+dist
+include
+lib
