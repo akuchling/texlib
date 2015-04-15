@@ -36,6 +36,8 @@ Reference:
     chapter 3 of _Digital Typography_, CSLI Lecture Notes #78.
 """
 
+from __future__ import print_function
+
 import sys, string
 import UserList
 
@@ -178,7 +180,7 @@ class ObjectList(UserList.UserList):
         length = self.measure_width(pos1, pos2)
         if self[pos2].is_penalty(): length = length + self[pos2].width
         if self.debug:
-            print '\tline length=', length
+            print('\tline length=', length)
 
         # Get the length of the current line; if the line_lengths list
         # is too short, the last value is always used for subsequent
@@ -323,7 +325,7 @@ class ObjectList(UserList.UserList):
         active_nodes = [A]
 
         if self.debug:
-            print 'Looping over %i box objects' % m
+            print('Looping over %i box objects' % m)
 
         for i in range(m):
             B = self[i]
@@ -331,8 +333,8 @@ class ObjectList(UserList.UserList):
             # perform the main loop if it is.
             if self.is_feasible_breakpoint(i):
                  if self.debug:
-                     print 'Feasible breakpoint at %i:' % i
-                     print '\tCurrent active node list:', active_nodes
+                     print('Feasible breakpoint at %i:' % i)
+                     print('\tCurrent active node list:', active_nodes)
 
                  if self.debug:
                      # Print the list of active nodes, sorting them
@@ -341,7 +343,7 @@ class ObjectList(UserList.UserList):
                          return cmp( (n1.line, n1.position, n1.fitness_class),
                                      (n2.line, n2.position, n2.fitness_class) )
                      active_nodes.sort(cmp_f)
-                     for A in active_nodes: print A.position, A.line, A.fitness_class
+                     for A in active_nodes: print(A.position, A.line, A.fitness_class)
                      print ; print
 
                  # Loop over the list of active nodes, and compute the fitness
@@ -350,8 +352,8 @@ class ObjectList(UserList.UserList):
                  for A in active_nodes[:]:
                      r = self.compute_adjustment_ratio(A.position, i, A.line, line_lengths)
                      if self.debug:
-                         print '\tr=', r
-                         print '\tline=', A.line
+                         print('\tr=', r)
+                         print('\tline=', A.line)
 
                      # XXX is 'or' really correct here?  This seems to
                      # remove all active nodes on encountering a forced break!
@@ -359,22 +361,22 @@ class ObjectList(UserList.UserList):
                          # Deactivate node A
                          if len(active_nodes) == 1:
                              if self.debug:
-                                 print "Can't remove last node!"
+                                 print("Can't remove last node!")
                                  # XXX how should this be handled?
                                  # Raise an exception?
                          else:
                              if self.debug:
-                                 print '\tRemoving node', A
+                                 print('\tRemoving node', A)
                              active_nodes.remove(A)
 
                      if -1 <= r <= tolerance:
                          # Compute demerits and fitness class
                          if p[i] >= 0:
-                             demerits = (1 + 100 * abs(r)**3L + p[i]) ** 3L
+                             demerits = (1 + 100 * abs(r)**3 + p[i]) ** 3
                          elif self.is_forced_break(i):
-                              demerits = (1 + 100 * abs(r)**3L) ** 2L - p[i]**2L
+                              demerits = (1 + 100 * abs(r)**3) ** 2 - p[i]**2
                          else:
-                             demerits = (1 + 100 * abs(r)**3L) ** 2L
+                             demerits = (1 + 100 * abs(r)**3) ** 2
 
                          demerits = demerits + (flagged_demerit * f[i] *
                                                 f[A.position])
@@ -393,8 +395,8 @@ class ObjectList(UserList.UserList):
                              demerits = demerits + fitness_demerit
 
                          if self.debug:
-                             print '\tDemerits=', demerits
-                             print '\tFitness class=', fitness_class
+                             print('\tDemerits=', demerits)
+                             print('\tFitness class=', fitness_class)
 
                          # Record a feasible break from A to B
                          brk = _BreakNode(position = i, line = A.line + 1,
@@ -406,22 +408,22 @@ class ObjectList(UserList.UserList):
                                        previous = A)
                          breaks.append(brk)
                          if self.debug:
-                             print '\tRecording feasible break', B
-                             print '\t\tDemerits=', demerits
-                             print '\t\tFitness class=', fitness_class
+                             print('\tRecording feasible break', B)
+                             print('\t\tDemerits=', demerits)
+                             print('\t\tFitness class=', fitness_class)
 
                  # end for A in active_nodes
                  if breaks:
                      if self.debug:
-                         print 'List of breaks at ', i, ':', breaks
+                         print('List of breaks at ', i, ':', breaks)
                      for brk in breaks:
                          self.add_active_node(active_nodes, brk)
             # end if self.feasible_breakpoint()
         # end for i in range(m)
 
         if self.debug:
-            print 'Main loop completed'
-            print 'Active nodes=', active_nodes
+            print('Main loop completed')
+            print( 'Active nodes=', active_nodes)
 
         # Find the active node with the lowest number of demerits.
         L = map(lambda A: (A.demerits, A), active_nodes)
@@ -507,7 +509,7 @@ if __name__ == '__main__':
     line_lengths = range(120, 20, -10)
     breaks = L.compute_breakpoints( line_lengths,
                                     tolerance = 2)
-    print breaks, len(L)
+    print(breaks, len(L))
 
     assert breaks[0] == 0
     line_start = 0
